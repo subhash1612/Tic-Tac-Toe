@@ -169,7 +169,7 @@ while(inp == 'Y'):
             player.score += 1
             break
                 
-    if(checkfull(board)):
+    if(checkfull(board) and pres!=1 and cres!=1):
         print("\nGame is a tie")
     print("\n\nScore\n")
     print(comp.name + ': '+str(comp.score) +"\t"+player.name+": "+str(player.score))
