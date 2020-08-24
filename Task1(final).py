@@ -9,8 +9,8 @@ class Person:
 
     def __init__(self,name,ctype):
         self.name = name
-        self.ctype = ctype
-        self.score = 0
+        self.ctype = ctype  #To keep a track of the character(X/O)
+        self.score = 0  #To keep track of the wins of the player
     
     def playerMove(self):
         
@@ -20,7 +20,7 @@ class Person:
             try:
                 if(pos>0 and pos<10):
 
-                    if(isFree(pos)):
+                    if(isFree(pos)):   #Only if the entered position is free the player is allowed to place his character
                         check = False
                         insertAtPos(pos,self.ctype)
                        
@@ -40,7 +40,7 @@ class Computer:
     
     def compMove(self):
         move = 0
-        possiblemoves = [i for i,let in enumerate(board) if(let==' ') and i!=0]
+        possiblemoves = [i for i,let in enumerate(board) if(let==' ') and i!=0] #To get the list of all the possible moves with indices
         for let in['X','O']:
             for x in possiblemoves:
                 copy = board[:] #creating a copy of the board and checking possible move to win
@@ -50,25 +50,25 @@ class Computer:
                     move = x
                     return move
         
-        odd = []    #getting the corner points
+        odd = []    #getting the corner points (1,3,7,9)
         for i in possiblemoves:
             if i in [1,3,7,9]:
                 odd.append(i)
         
         if(len(odd)>0):
-            move  = selectRand(odd)
+            move  = selectRand(odd) #To select a random position from the corner points for the computer
             return move
         
         even = [] #getting the edges
         for i in possiblemoves:
-            if i in [2,4,6,8]:
+            if i in [2,4,6,8]: #To select a random position from the edge points(2,4,6,8) for the computer
                 even.append(i)
         
         if(len(even)>0):
             move = selectRand(even)
             return move
 
-        if(5 in possiblemoves):
+        if(5 in possiblemoves): #checking if the center postition is free(i.e 5)
             move = 5
             return move
         return move
@@ -79,7 +79,7 @@ def selectRand(lst):
     return lst[i]           
 
 
-def checkfull(board):
+def checkfull(board): #Function to check if board is full
     if(board.count(' ') >1):
         return False
     else:
@@ -88,11 +88,11 @@ def checkfull(board):
 def isFree(pos):
     return board[pos] == ' '
 
-def insertAtPos(pos,let):
+def insertAtPos(pos,let): #Insert respective character at desired position
     board[pos] = let
 
 
-def checkWinner(board,p):
+def checkWinner(board,p): #Function to decide the winner
 
     if((board[1]==p and board[2]==p) and (board[3]==p)):
         return 1
@@ -113,7 +113,7 @@ def checkWinner(board,p):
     else:
         return 0
 
-def printBoard(board):
+def printBoard(board): # Function to print the tic tac toe board
 
     print(board[1] + ' | ' + board[2] + ' | ' + board[3])
     print('- + - + -')
@@ -121,7 +121,7 @@ def printBoard(board):
     print('- + - + -')
     print(board[7] + ' | ' + board[8] + ' | ' + board[9])
 
-def deideCompChar(ptype):
+def deideCompChar(ptype): #Function to decide the character type of the player based on the users choice
     if(ptype=='X'):
         ctype = 'O'
     else:
@@ -140,13 +140,13 @@ ctype = deideCompChar(ptype)
 comp.ctype = ctype
 while(inp == 'Y'):
     os.system("cls")
-    board = [' ' for x in range(10)]
+    board = [' ' for x in range(10)] #Statement to clear the board if the user wants to play again
     os.system("cls")
     printBoard(board)
-    while(not(checkfull(board))):
+    while(not(checkfull(board))): #Iterate until the board is full
         cres = checkWinner(board,comp.ctype)
-        if(cres==0):
-            player.playerMove()
+        if(cres==0): #The computer has not won yet(1 is returned if it has won)
+            player.playerMove() #Player makes his move
             os.system("cls")
             printBoard(board)
         else:
@@ -154,10 +154,10 @@ while(inp == 'Y'):
             comp.score += 1
             break
             
-        pres = checkWinner(board,player.ctype)
+        pres = checkWinner(board,player.ctype) #Checking if the player has won
         if(pres == 0):
             move = comp.compMove()
-            if(move == 0):
+            if(move == 0): #No possible moves available(Board is full)
                 break
     
             insertAtPos(move,comp.ctype)
@@ -169,7 +169,7 @@ while(inp == 'Y'):
             player.score += 1
             break
                 
-    if(checkfull(board) and pres!=1 and cres!=1):
+    if(checkfull(board) and cres!=1 and pres!=1):
         print("\nGame is a tie")
     print("\n\nScore\n")
     print(comp.name + ': '+str(comp.score) +"\t"+player.name+": "+str(player.score))
